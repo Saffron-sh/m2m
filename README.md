@@ -1,11 +1,14 @@
 # m2m
 A minimal bash tool to convert video files to any other supported media files using yt-dlp and ffmpeg.
-The $YTDIR filepath points to $HOME/Music/ytdownloads because it was first created with the intent to
-download youtube videos using yt-dlp and then convert them using ffmpeg.
 
-YOU MUST PASS TWO ARGUMENTS, FIRST THE LINK OF THE VIDEO AND THEN THE NAME OF THE FILE.EXTENSION YOU 
-WANT IT TO BE CONVERTED TO.
+#How it works:
+->Fetches the video from the url using yt-dlp
+->Saves it in your $YTDIR directory ($YTDIR=$HOME/Music/ytdownloads) by default.
+->Uses ffmpeg to convert the video to another file format
+->Deletes the video file and saves the converted file to $YTDIR
 
-e.g- m2m https://yourvideourl converted.mp3 
+#Suggested:
+Add 'export YTDIR=$HOME/Music/ytdownloads' to your .bashrc or .zshrc file.
 
-change .mp3 to any media format desired.
+#Usage:
+$m2m <VIDEO URL> <Output file WITH extension>
