@@ -13,4 +13,10 @@ Add this line to your `.bashrc` or `.zshrc` file to set your output directory:
 
 ```bash
 export YTDIR=$HOME/Music/ytdownloads
-'''bash
+```
+
+## Usage:
+ ```bash
+m2m "https://www.youtube.com/watch?v=EYI489Dc4Sc" outputfile.mp3
+```
+Change the extension form `.mp3` to anything you like
