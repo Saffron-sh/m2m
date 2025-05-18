@@ -13,3 +13,4 @@ Add this line to your `.bashrc` or `.zshrc` file to set your output directory:
 
 ```bash
 export YTDIR=$HOME/Music/ytdownloads
+'''bash
