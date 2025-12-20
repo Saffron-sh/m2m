@@ -302,7 +302,7 @@ if [[ $multiple_switch != true  && $playlist_switch != true ]];then
 
 	#Block telling the user whether the stream was downloaded or not
 	if [[ $? -eq 0 ]];then
-		echo -e "$blue[*] Stream downloaded $norm"
+		echo -e "$green[✓] Stream downloaded $norm"
 		
 		if [[ $opt_dest_dir_switch == true ]];then
 			file_save_location=$dest_dir
