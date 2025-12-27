@@ -11,7 +11,7 @@ VERSION="2.4.1-1"
 
 #Making arrangements before executing the script
 
-YTDIR="$HOME/Music/ytdownloads"
+YTDIR="$HOME/Music/m2m"
 MULTI_DIR="$YTDIR/multi_mode"
 PLAYLIST_DIR="$YTDIR/playlists"
 ERROR_LOG="$HOME/.local/share/m2m_error_log"
