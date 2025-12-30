@@ -5,8 +5,8 @@ A minimal bash tool to convert YouTube video files to any other supported media 
 "m2m" stands for **Media to Media**.
 ## How it works:
 - Fetches the video from the URL using yt-dlp
-- Saves it in your `$YTDIR` directory (`$YTDIR=$HOME/Music/ytdownloads` by default)
-- Or in your `$MULTI_DIR` directory for batch downloads (`$MULTI_DIR=$HOME/Music/ytdownloads/multi_mode` by default)
+- Saves it in your `$YTDIR` directory (`$YTDIR=$HOME/Music/m2m` by default)
+- Or in your `$MULTI_DIR` directory for batch downloads (`$MULTI_DIR=$HOME/Music/m2m/multi_mode` by default)
 - Uses ffmpeg to convert the video to another file format
 - Deletes the original video file and saves the converted file to `$YTDIR`
 
@@ -98,9 +98,9 @@ Enter the URL(type 'done' when you are done): done
 
 ## Notes
 - By default, downloads are saved in:
-  - `$HOME/Music/ytdownloads` for single downloads.
-  - `$HOME/Music/ytdownloads/multi_mode` for batch downloads.
-  - `$HOME/Music/ytdownloads/playlists` for playlist downloads.
+  - `$HOME/Music/m2m` for single downloads.
+  - `$HOME/Music/m2m/multi_mode` for batch downloads.
+  - `$HOME/Music/m2m/playlists` for playlist downloads.
 - Also the error logs are saved in `$HOME/.local/share` by default, i'd personally suggest you keep it like that, but if you know what you are doing changing it would not have much effect.
 - You can add the `-d` flag followed by any _path_  to have **m2m** save the file(s) there.
 - The playlist flags `-pl|--playlist|-PL` create a directory in `$PLAYLIST_DIR` by the name of the title of the playlist and all the files are saved in it.
