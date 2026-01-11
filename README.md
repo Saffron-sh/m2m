@@ -115,7 +115,7 @@ Enter the URL(type 'done' when you are done): done
 ## Support
 
 m2m was built mostly because I wanted it to exist.  
-If it helps you too, and you’d like to buy me a coffee (no pressure at all), you can tip a few sats here:
+If it helps you too, and you’d like to buy me a coffee, you can support us here:
 
 **BTC (On-chain):** 
 `bc1qsjjgj3yqvhe5dw0xlxqzch4zlqnlwqctchlztf`
