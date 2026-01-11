@@ -7,7 +7,7 @@ yellow="\033[1;33m"
 blue="\033[1;34m"
 
 #Script natives
-VERSION="2.4.1-1"
+VERSION="2.5.1-1"
 
 #Making arrangements before executing the script
 
@@ -25,7 +25,7 @@ file_name="placeholder"
 playlist_switch=false
 multiple_switch=false
 opt_dest_dir_switch=false
-
+meta_switch=false
 
 multi_dnc(){
 	dest_dir=$1
@@ -70,6 +70,60 @@ multi_dnc(){
 		#counter=$(($counter+1))	
 	done
 
+}
+
+download_meta(){
+    URL_FOR_META="$1" 
+
+    META_COMMAND=(
+    yt-dlp
+    -x
+    --quiet
+    --progress
+    --no-warnings
+    --audio-format flac
+    --audio-quality 0
+    --embed-metadata
+    --embed-thumbnail
+    --no-write-thumbnail
+    --parse-metadata "title:%(title)s"
+    --parse-metadata "artist:%(channel)s"
+    -o "%(title)s.%(ext)s"
+    )
+
+
+    if [[ "$URL_FOR_META" == *list=* ]];then
+        echo -e "$blue[*] Acquiring playlist data from YouTube$norm"
+        json=$(yt-dlp --flat-playlist -J "$URL_FOR_META")
+        echo -e "$green[✓]Playlist data aquired$norm"
+
+        title=$(echo "$json" | jq -r '.title' | tr -cd '[:alnum:] ' |tr ' ' '_')
+        mkdir $title
+        cd $title
+
+        list_urls=$(echo "$json" | jq -r '.entries[] | .url')
+        counter=1
+        
+        for url in $list_urls;do
+            echo -e "$blue[*] Downloading stream $counter$norm"
+            "${META_COMMAND[@]}" "$url"
+            
+            if [[ $? -eq 0 ]];then
+                echo -e "$green[✓] Stream $counter Downloaded $norm"
+            fi
+
+            counter=$(($counter+1))
+        done
+    
+    else
+        echo -e "$blue[*] Downloading stream from youtube$norm"
+        "${META_COMMAND[@]}" "$URL_FOR_META"
+
+        if [[ $? -eq 0 ]];then
+            echo -e "$green[✓] Stream Downloaded and saved to $(pwd) $norm"
+        fi
+
+    fi
 }
 
 download_pl(){
@@ -155,14 +209,6 @@ get_title(){
     echo "$title".wav
 }
 
-get_quality(){
-	url="$1"
-	quality="$2"
-	stream=$(yt-dlp -F --no-warnings "$url" | grep "$quality" | grep -v dash | grep en)
-	echo "$stream"
-	
-}
-
 show_version(){
 	echo -e "$blue[*] m2m: Version: $VERSION $norm"
 	exit 0
@@ -177,7 +223,7 @@ show_help(){
 |_|  |_|_____|_|  |_|           
 
 Usage: For single downloads
-$blue[*] If no name is provided, the video will be downloaded in WAV format with its original name$norm
+$red[!] If no name is provided, the video will be downloaded in WAV format with its original name$norm
 m2m [-d <destination_dir>] <url> <filename.ext>
 
 For multiple downloads: (put number of downloads as 'n' for infinite downloads)
@@ -191,7 +237,8 @@ Flags:
 	-m|--multi-download	Use multi download mode (described above)
 	-d|--destination	Use the provided destination directory rather than the default one
 	-pl|--playlist|-PL 	Download an entire playlist not just a video
-	"
+	-M|--meta           Download the track audio with all the metadata from youtube. (OFF by default)
+    "
 }
 
 check_dependencies(){
@@ -211,20 +258,23 @@ for arg in "$@";do
 	case $arg in
 		-pl)
 			set -- "${@/-pl/-p}";;
-		--playlist)
+		--meta)
+            set -- "${@/--meta/-M}";;
+        --playlist)
 			set -- "${@/--playlist/-p}";;
 		--destination)
 			set -- "${@/--destination/-d}";;
 	esac
 done
 
-while getopts ":m:d:p:vh" arg;do
+while getopts ":m:d:p:Mvh" arg;do
 	case $arg in
 		m)
 			multiple_switch=true
 			multiple_switch_counter="$OPTARG"
 			;;
-		d)
+      
+        d)
 			opt_dest_dir_switch=true
 			opt_dest_dir="$OPTARG"
 			if [[ ! -d "$opt_dest_dir" ]]; then
@@ -240,7 +290,10 @@ while getopts ":m:d:p:vh" arg;do
                 exit 1
             fi
 			;;
-		v)
+	    M)
+            meta_switch=true
+            ;;
+        v)
 			show_version
 			exit 0
 			;;
@@ -266,7 +319,7 @@ for arg in "$@";do
 	esac
 done
 
-if [[ -z "$LINK" && $playlist_switch == false && $multiple_switch == false ]]; then
+if [[ -z "$LINK" && $playlist_switch == false && $multiple_switch == false && $meta_switch == false  ]]; then
     echo -e "$red[!] Usage: m2m [-d <destination_dir>] <url> <filename.ext> $norm"
     exit 1
 fi
@@ -280,7 +333,10 @@ if [[ "$file_name" == "placeholder" && $playlist_switch == false && $multiple_sw
     file_name=$(get_title "$LINK")
 fi
 
-
+if [[ "$meta_switch" == true ]];then
+    download_meta "$LINK"
+    exit 0
+fi
 
 if [[ $multiple_switch != true  && $playlist_switch != true ]];then
 
